@@ -1,6 +1,6 @@
 # CS7650-project-vqa
 #### Images: Training images (5k), Validation images (1k)
-https://drive.google.com/open?id=1cLUCEGM4UW_GrI5iZdZfdLaPjM0hYvx_
+https://drive.google.com/file/d/1cLUCEGM4UW_GrI5iZdZfdLaPjM0hYvx_/view
 <br><br>
 #### Pre-processed data:
 ###### answer_tokens_top1k.json: Contains the Top 1k answers (sorted by frequency) from the training dataset in tokenised form.
