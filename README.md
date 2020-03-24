@@ -1,5 +1,5 @@
 # CS7650-project-vqa
-#### Images: Training (5k), Validation (1k)
+#### Images (~745 MB): Training (5k), Validation (1k)
 https://drive.google.com/file/d/1cLUCEGM4UW_GrI5iZdZfdLaPjM0hYvx_/view
 <br><br>
 #### Pre-processed data:
