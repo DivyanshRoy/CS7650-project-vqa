@@ -1,6 +1,9 @@
 # CS7650-project-vqa
 #### Images (~745 MB): Training (5k), Validation (1k)
 https://drive.google.com/file/d/1cLUCEGM4UW_GrI5iZdZfdLaPjM0hYvx_/view
+
+Get combined_train_input.npy from https://drive.google.com/open?id=1_PkcsLndQb42SvwXRTU6SK-9_TvoKfVh and paste it in the preprocessed_data folder
+
 <br><br>
 #### Pre-processed data:
 ###### train_dataset_5k.json: Contains 5k randomly chosen question, answer, image triplets from the training dataset.
