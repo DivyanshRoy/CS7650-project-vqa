@@ -3,6 +3,8 @@
 https://drive.google.com/file/d/1cLUCEGM4UW_GrI5iZdZfdLaPjM0hYvx_/view
 
 Get combined_train_input.npy from https://drive.google.com/open?id=1_PkcsLndQb42SvwXRTU6SK-9_TvoKfVh and paste it in the preprocessed_data folder
+Get train_image_list.npy from https://drive.google.com/open?id=12zyK8Joa8F0CtpwVWW4alcY7cK-q22h9
+Get val_image_list.npy from https://drive.google.com/open?id=16L8NwE7S48Q2LyPtWqwU8L0Tv8KZCdRw
 
 <br><br>
 #### Pre-processed data:
