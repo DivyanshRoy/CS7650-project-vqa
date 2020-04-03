@@ -8,6 +8,10 @@ Get train_image_list.npy from https://drive.google.com/open?id=12zyK8Joa8F0CtpwV
 
 Get val_image_list.npy from https://drive.google.com/open?id=16L8NwE7S48Q2LyPtWqwU8L0Tv8KZCdRw
 
+Get resnet_152_train_image_features.npy from https://drive.google.com/open?id=1XgLY5lZZ08p2J_G5juRzBEs-T83HjKWp
+
+Get resnet_152_val_image_features.npy from https://drive.google.com/open?id=1sZEZ2stpsQu470emis1DMHftGXCL5E5E
+
 <br><br>
 #### Pre-processed data:
 ###### train_dataset_5k.json: Contains 5k randomly chosen question, answer, image triplets from the training dataset.
