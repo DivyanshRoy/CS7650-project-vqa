@@ -1,4 +1,8 @@
 # CS7650-project-vqa
+
+#### Updated Dataset: https://drive.google.com/open?id=1SNIdZWokJkPCWDAwI6Rir44hiCNDQzYY
+VGG Feature Map: https://drive.google.com/open?id=17VVNSCvntdrkIFEINB9CThhtpFLAVtQs
+
 #### Images (~745 MB): Training (5k), Validation (1k)
 https://drive.google.com/file/d/1cLUCEGM4UW_GrI5iZdZfdLaPjM0hYvx_/view
 
