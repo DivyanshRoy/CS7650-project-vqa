@@ -14,7 +14,7 @@ class SimpleLSTM(nn.Module):
       super(SimpleLSTM, self).__init__()
       non_trainable = True
       num_embeddings, embedding_dim = weights_matrix.size()
-      emb_layer = nn.Embedding(num_embeddings, embedding_dim)
+      emb_layer = nn.Embedding(num_embeddings, embedding_dim, sparse=True)
       emb_layer.load_state_dict({'weight': weights_matrix})
       if non_trainable:
           emb_layer.weight.requires_grad = False
@@ -32,9 +32,9 @@ class SimpleLSTM(nn.Module):
   def init_hidden(self, batch_size):
       return Variable(torch.zeros(self.num_layers, batch_size, self.hidden_size))
 
-class SimpleCNNLSTM(nn.Module):
-  def __init__(self, weights_matrix, lstm_hidden_size, lstm_num_layers, model_input, answer_type, fusion_type, Top100):
-    super(SimpleCNNLSTM, self).__init__()
+class FusionModel(nn.Module):
+  def __init__(self, weights_matrix, lstm_hidden_size, lstm_num_layers, model_input, answer_type, fusion_type, shared_size, dropout_amount, Top100):
+    super(FusionModel, self).__init__()
     self.model_input = model_input
     self.answer_type = answer_type
     self.fusion_type = fusion_type
@@ -44,47 +44,75 @@ class SimpleCNNLSTM(nn.Module):
       image_embedding_dim = 512
     elif model_input == "resnet 192 image features, question":
       image_embedding_dim = 2048
+    elif model_input == "new resnet 18 features":
+      image_embedding_dim = 512
+    elif model_input == "new resnet 152 features":
+      image_embedding_dim = 2048
     
     if self.fusion_type == "pointwise_mul" and image_embedding_dim==(lstm_hidden_size*lstm_num_layers):
       self.combined_embedding_dim = image_embedding_dim
+    elif self.fusion_type == "try":
+      self.img_dense1 = nn.Linear(image_embedding_dim, lstm_hidden_size*lstm_num_layers)
+      self.img_dense2 = nn.Linear(lstm_hidden_size*lstm_num_layers, shared_size)
+
+      self.q_dense1 = nn.Linear(lstm_hidden_size*lstm_num_layers, image_embedding_dim)
+      self.q_dense2 = nn.Linear(image_embedding_dim, shared_size)
+      self.combined_embedding_dim = shared_size
     else:
       self.combined_embedding_dim = image_embedding_dim + (lstm_hidden_size*lstm_num_layers)
-    
     if model_input == "resnet 18 image features, question" and Top100 == True:
+      print("100")
       self.fc1 = nn.Linear(self.combined_embedding_dim, 100)
+    elif model_input == "new resnet 18 features":
+      self.fc1 = nn.Linear(self.combined_embedding_dim, 13)
+    elif model_input == "new resnet 152 features":
+      self.fc1 = nn.Linear(self.combined_embedding_dim, 13)
     elif self.answer_type == "yesno":
-      self.fc1 = nn.Linear(self.combined_embedding_dim, 10)
-      self.fc2 = nn.Linear(10, 2)
+      self.fc1 = nn.Linear(self.combined_embedding_dim, 16)
+      self.fc2 = nn.Linear(16, 2)
       # self.fc3 = nn.Linear(8, 1)
     elif self.answer_type == "number":      
-      self.fc1 = nn.Linear(self.combined_embedding_dim, 512)
-      self.fc2 = nn.Linear(512, 100)
+      self.fc1 = nn.Linear(self.combined_embedding_dim, 100)
+      # self.fc2 = nn.Linear(512, 100)
     elif self.answer_type == "other":      
       self.fc1 = nn.Linear(self.combined_embedding_dim, 1000)
-    if self.answer_type == "yesno":
-      self.sigmoid = nn.Sigmoid()
-      # pass
-    else:
-      self.softmax = nn.Softmax(dim=1)
-    # self.dropout = nn.Dropout(p=0.1)
+    # if self.answer_type == "yesno":
+    #   self.sigmoid = nn.Sigmoid()
+    #   # pass
+    # else:
+    self.softmax = nn.Softmax(dim=1)
+    self.dropout = nn.Dropout(p=dropout_amount)
     
   # def forward(self, inputs):
   def forward(self, inputs, questions=None):
-    if self.model_input == "resnet 18 image features, question" or self.model_input == "resnet 192 image features, question":
+    # print(inputs.size())
+    if self.model_input == "resnet 18 image features, question" or self.model_input == "resnet 192 image features, question" or self.model_input == "new resnet 18 features" or self.model_input == "new resnet 152 features":
       image_features = inputs
 
       questions = questions.type(torch.long)
-      _, question_embeddings = self.lstm_model(questions)
+      qout, question_embeddings = self.lstm_model(questions)
+      # print(qout.size())
+      # print(question_embeddings.size())
+      question_embeddings = qout[:,-1,:].view(1, qout.size(0), qout.size(2))
       question_embeddings = question_embeddings.view(question_embeddings.size(1),-1)
       # image_features = self.dropout(image_features)
       # question_embeddings = self.dropout(question_embeddings)
-      # print("1d")
       if self.fusion_type == "pointwise_mul" and image_features.size(1)==question_embeddings.size(1):
         combined_embeddings = image_features*question_embeddings
+      elif self.fusion_type == "try":
+        img2q = self.dropout(self.img_dense1(image_features))
+        img2qq = img2q*question_embeddings
+        sh1 = self.dropout(self.img_dense2(img2qq))
+
+        q2img = self.dropout(self.q_dense1(question_embeddings))
+        q2img2 = q2img*image_features
+        sh2 = self.dropout(self.q_dense2(q2img2))
+
+        combined_embeddings = sh1*sh2
       else:
         combined_embeddings = torch.cat((image_features,question_embeddings), 1)
-        
-      # print("2d")
+      combined_embeddings = self.dropout(combined_embeddings)
+      
     
     # if self.image_features == False:
     #   image_features = self.image_features(images)
@@ -93,21 +121,18 @@ class SimpleCNNLSTM(nn.Module):
     # questions = questions.type(torch.long)
     # _, question_embeddings = self.lstm_model(questions)
     # question_embeddings = question_embeddings.view(question_embeddings.size(1),question_embeddings.size(2))
-    # combined_embeddings = torch.cat((image_features,question_embeddings), 1)
+    # combined_embeddingsw = torch.cat((image_features,question_embeddings), 1)
     # x = F.relu(self.fc1(inputs))
     x = F.relu(self.fc1(combined_embeddings))
-    # print("3d")
     if self.answer_type == "yesno":
       # x = x
       x = F.relu(self.fc2(x))
       # x = F.relu(self.fc3(x))
-      x = self.sigmoid(x)
+      # x = self.sigmoid(x)
       # pass
-    elif self.answer_type == "other":
-      x = self.softmax(x)
-    else:
-      x = F.relu(self.fc2(x))
-      x = self.softmax(x)
+    # else:
+      # x = F.relu(self.fc2(x))
+    x = self.softmax(x)
     return x
   
   # def image_features(self, images):
