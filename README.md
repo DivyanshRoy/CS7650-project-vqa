@@ -1,5 +1,7 @@
 # CS7650-project-vqa
 
+#### Data with 32k training samples, 20k validation samples: https://drive.google.com/open?id=1DCHNVK5pxAKOiiJcfMGcO-pSjJDIv1zT
+
 #### Dataset with 1000 examples per class: https://drive.google.com/open?id=1mlTiL_MMOYM1ohecJPjKpISr13b16Oup
 
 #### Updated Dataset: https://drive.google.com/open?id=1SNIdZWokJkPCWDAwI6Rir44hiCNDQzYY
