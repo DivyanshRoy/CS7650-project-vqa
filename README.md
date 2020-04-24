@@ -2,6 +2,7 @@
 
 #### Model weights: https://drive.google.com/open?id=1dMvJ9bQlIhEHjr_zw5uL6KLuGJfKpfqs
 #### Dataset (Numpy files): https://drive.google.com/open?id=1DCHNVK5pxAKOiiJcfMGcO-pSjJDIv1zT
+#### Raw Images for dataset: http://images.cocodataset.org/zips/train2014.zip , http://images.cocodataset.org/zips/val2014.zip
 
 #### Dataset with 1000 examples per class: https://drive.google.com/open?id=1mlTiL_MMOYM1ohecJPjKpISr13b16Oup
 
