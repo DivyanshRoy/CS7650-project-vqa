@@ -20,6 +20,7 @@ class SimpleLSTM(nn.Module):
       # emb_layer.load_state_dict({'weight': weights_matrix})
       # if non_trainable:
           # emb_layer.weight.requires_grad = False
+      # self.fc = nn.Linear(512, embedding_dim)
       self.embedding = emb_layer
       self.num_embeddings = num_embeddings
       self.embedding_dim = embedding_dim
@@ -28,6 +29,12 @@ class SimpleLSTM(nn.Module):
       self.gru = nn.GRU(embedding_dim, hidden_size, num_layers, batch_first=True, dropout=dropout_amount)
       
   def forward(self, inp):
+      # e = self.embedding(inp)
+      # images = self.fc(images)
+      # images = images.view(images.size(0), 1, images.size(1))
+      # v = e*images
+      # return self.gru(v)
+      # print(self.embedding(inp).size())
       return self.gru(self.embedding(inp))
   
   
@@ -93,7 +100,7 @@ class FusionModel(nn.Module):
       # self.fc2 = nn.Linear(interim_size, 13)
       self.fc1 = nn.Linear(self.combined_embedding_dim, 104)
       
-    elif model_input == "snew resnet 152 features":
+    elif model_input == "new resnet 152 features":
       # self.fc1 = nn.Linear(self.combined_embedding_dim, 13)
       interim_size = 512
       self.fc1 = nn.Linear(self.combined_embedding_dim, interim_size)
@@ -170,10 +177,12 @@ class FusionModel(nn.Module):
         # print(img2q.size())
         # print(question_embeddings.size())
         img2qq = img2q*question_embeddings
+        # img2qq = img2q
         sh1 = self.dropout(self.bn2(self.img_dense2(img2qq)))
 
         q2img = self.dropout(self.bn3(self.q_dense1(question_embeddings)))
         q2img2 = q2img*image_features
+        # q2img2 = q2img
         sh2 = self.dropout(self.bn4(self.q_dense2(q2img2)))
 
         combined_embeddings = sh1*sh2
@@ -210,7 +219,7 @@ class FusionModel(nn.Module):
       # pass
     # else:
       # x = F.relu(self.fc2(x))
-    # x = self.softmax(x)
+    x = self.softmax(x)
     return x
   
   # def image_features(self, images):
