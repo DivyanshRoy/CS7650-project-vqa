@@ -9,7 +9,7 @@
 ### Models:
 1. Fusion Model: Run Trainer.ipynb with default settings
 2. CNN + LSTM Model: Run Trainer.ipynb and change fusion_type to Concatenation
-3. Parallel and Alternate Co-Attention Model: Run ParallelAndCoAttention.py
+3. Parallel and Alternate Co-Attention Model: Run ParallelAndAlternateCoAttention.py
 4. Fusion and Co-Attention Model: Run FusionAndCoAttention.py
 
 ### Model Weights: 
