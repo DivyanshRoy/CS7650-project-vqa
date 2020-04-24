@@ -1,32 +1,15 @@
 # CS7650-project-vqa
 
-#### Model weights: https://drive.google.com/open?id=1dMvJ9bQlIhEHjr_zw5uL6KLuGJfKpfqs
-#### Dataset (Numpy files): https://drive.google.com/open?id=1DCHNVK5pxAKOiiJcfMGcO-pSjJDIv1zT
-#### Raw Images for dataset: http://images.cocodataset.org/zips/train2014.zip , http://images.cocodataset.org/zips/val2014.zip
+### Data: 
+1. Dataset consists of ResNet-18 Image features, Tokenised Questions, Tokenised Answers (in Numpy format): https://drive.google.com/open?id=1DCHNVK5pxAKOiiJcfMGcO-pSjJDIv1zT
+2. For generating VGG-16 Image features needed by Parallel and Alternate Co-Attention, Fusion and Co-Attention model use the Python notebook named DataCreationVGG.
+3. Raw Images for dataset (needed for creating VGG-16 Image features): http://images.cocodataset.org/zips/train2014.zip, http://images.cocodataset.org/zips/val2014.zip
 
-#### Dataset with 1000 examples per class: https://drive.google.com/open?id=1mlTiL_MMOYM1ohecJPjKpISr13b16Oup
+### Models:
+1. Fusion Model: Run Trainer.ipynb with default settings
+2. CNN + LSTM Model: Run Trainer.ipynb and change fusion_type to Concatenation
+3. Parallel and Alternate Co-Attention Model: Run ParallelAndCoAttention.py
+4. Fusion and Co-Attention Model: Run FusionAndCoAttention.py
 
-#### Updated Dataset: https://drive.google.com/open?id=1SNIdZWokJkPCWDAwI6Rir44hiCNDQzYY
-VGG Feature Map: https://drive.google.com/open?id=17VVNSCvntdrkIFEINB9CThhtpFLAVtQs
-
-#### Images (~745 MB): Training (5k), Validation (1k)
-https://drive.google.com/file/d/1cLUCEGM4UW_GrI5iZdZfdLaPjM0hYvx_/view
-
-Get combined_train_input.npy from https://drive.google.com/open?id=1_PkcsLndQb42SvwXRTU6SK-9_TvoKfVh and paste it in the preprocessed_data folder
-
-Get train_image_list.npy from https://drive.google.com/open?id=12zyK8Joa8F0CtpwVWW4alcY7cK-q22h9
-
-Get val_image_list.npy from https://drive.google.com/open?id=16L8NwE7S48Q2LyPtWqwU8L0Tv8KZCdRw
-
-Get resnet_152_train_image_features.npy from https://drive.google.com/open?id=1XgLY5lZZ08p2J_G5juRzBEs-T83HjKWp
-
-Get resnet_152_val_image_features.npy from https://drive.google.com/open?id=1sZEZ2stpsQu470emis1DMHftGXCL5E5E
-
-<br><br>
-#### Pre-processed data:
-###### train_dataset_5k.json: Contains 5k randomly chosen question, answer, image triplets from the training dataset.
-###### val_dataset_1k.json: Contains 1k randomly chosen question, answer, image triplets from the validation dataset.
-
-###### answer_tokens_top1k.json: Contains the Top 1k answers (sorted by frequency) from the training dataset in tokenised form.
-###### train_dataset_5k_tokenised.json: Contains most common answer (amongst 10 answers for each question with count >= 3) in tokenised form using tokenisation dictionary from answer_tokens_top1k.json
-###### val_dataset_1k_tokenised.json: Contains most common answer (amongst 10 answers for each question with count >= 3) in tokenised form using tokenisation dictionary from answer_tokens_top1k.json
+### Model Weights: 
+Trained Weights for all models: https://drive.google.com/open?id=1dMvJ9bQlIhEHjr_zw5uL6KLuGJfKpfqs
